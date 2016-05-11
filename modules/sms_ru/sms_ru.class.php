@@ -125,7 +125,7 @@ function admin(&$out) {
 			$this->redirect("?");
 		} 
 		if ($this->view_mode=='test') {
-			$this->processSubscription('SAY', array('level'=>0, 'message'=>'Test message from majordomo.smartliving.ru system'));			
+			$this->sendNotifyAll('Тестовое сообщение от majordomo.smartliving.ru');			
 			$this->redirect("?");
 		} 
 	}
@@ -144,14 +144,13 @@ function usual(&$out) {
 
 function send($api_id, $phone, $message)
 {	
-
 	$ch = curl_init("http://sms.ru/sms/send");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, array(
 		"api_id"	=>	$api_id,
 		"to"			=>	$phone,
-		"text"		=>	iconv("windows-1251","utf-8",$message)
+		"text"		=>	$message
 	));
 	$body = curl_exec($ch);
 	 
@@ -169,7 +168,7 @@ function sendNotifyAll($message)
 	 
 	 $total=count($res);
    for($i=0;$i<$total;$i++)
-		 send($res[$i]['API_ID'], $res[$i]['PHONE'], $message);
+		 $this->send($res[$i]['API_ID'], $res[$i]['PHONE'], $message);	 
 }
 
 function sendNotifByName($name,$message)
