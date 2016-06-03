@@ -125,7 +125,7 @@ function admin(&$out) {
 			$this->redirect("?");
 		} 
 		if ($this->view_mode=='test') {
-			$this->sendNotifyAll('Тестовое сообщение от majordomo.smartliving.ru', 99);
+			$this->sendNotifyAll('Тестовое сообщение от majordomo.smartliving.ru');			
 			$this->redirect("?");
 		} 
 	}
@@ -162,22 +162,21 @@ function send($api_id, $phone, $message)
 	curl_close($ch);		 	
 }
 
-function sendNotifyAll($message, $level = 1)
+function sendNotifyAll($message)
 {
-   $res=SQLSelect("SELECT * FROM smsru_list WHERE ACTIVE=1 AND level<=".$level);
+	 $res=SQLSelect("SELECT * FROM smsru_list WHERE ACTIVE=1");
 	 
-   $total=count($res);
-   for($i=0;$i<$total;$i++)	 
-     $this->send($res[$i]['API_ID'], $res[$i]['PHONE'], $message);	 
+	 $total=count($res);
+   for($i=0;$i<$total;$i++)
+		 $this->send($res[$i]['API_ID'], $res[$i]['PHONE'], $message);	 
 }
 
 function sendNotifByName($name,$message)
 {    
     $query = "SELECT * FROM smsru_list WHERE TITLE='".$name."'";
     $res=SQLSelect($query); 
-
-    foreach ($res as $row)
-      $this->send($row['API_ID'], $row['PHONE'], $message);
+    foreach ($res as $row) 
+      $this->send($res[$i]['API_ID'], $res[$i]['PHONE'], $message);     
 }
 
 function processSubscription($event, $details='') {
@@ -186,11 +185,11 @@ function processSubscription($event, $details='') {
     $level=$details['level'];
     $message=$details['message'];
   
-    $res=SQLSelect("SELECT * FROM smsru_list WHERE ACTIVE=1 AND level<=".$level);
+		$res=SQLSelect("SELECT * FROM smsru_list WHERE ACTIVE=1 AND level<=".$level);
 	 
-    $total=count($res);
+	  $total=count($res);
     for($i=0;$i<$total;$i++)
-      $this->send($res[$i]['API_ID'], $res[$i]['PHONE'], $message);		
+			$this->send($res[$i]['API_ID'], $res[$i]['PHONE'], $message);		
   }
 }
  
