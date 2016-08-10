@@ -233,7 +233,7 @@ function install($data='') {
   parent::install();
 }	
 
-function dbInstall() {	 
+function dbInstall($data) {	 
 	   $data = <<<EOD
  smsru_list: ID int(10) unsigned NOT NULL auto_increment
  smsru_list: TITLE varchar(100) NOT NULL DEFAULT ''
